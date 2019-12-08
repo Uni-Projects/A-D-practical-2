@@ -1,3 +1,7 @@
+/*
+ * Paolo Scattolin
+ * Johan Urban
+ */
 #include <iostream>
 #include <vector>
 #include <string>
