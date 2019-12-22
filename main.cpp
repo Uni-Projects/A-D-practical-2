@@ -35,22 +35,20 @@ bool costarred (const Actress& actress , const Actor& actor){
     return false;
 }
 
-bool bpm(vector<vector<bool>>& bpGraph, int u,vector<bool>& seen, vector<int>& matchR){
-    // Try every job one by one
+bool bpm(vector<vector<bool>>& bpGraph, int u, vector<bool>& seen, vector<int>& matchR){
+    // Try every actor one by one
     for (int v = 0; v < bpGraph.size(); v++){
-        // If applicant u is interested in
-        // job v and v is not visited
+        // If actress u has worked with actor v and v is not been already seen
         if (bpGraph[u][v] && !seen[v]){
-            // Mark v as visited
+            // Mark v as seen
             seen[v] = true;
-            // If job 'v' is not assigned to an
-            // applicant OR previously assigned
-            // applicant for job v (which is matchR[v])
-            // has an alternate job available.
+            // If actor 'v' is not already matched to an
+            // actresses OR previously seen, actress for actor v (which is matchR[v])
+            // has an alternate actor available. ???
             // Since v is marked as visited in
             // the above line, matchR[v] in the following
-            // recursive call will not get job 'v' again
-            if (matchR[v] < 0 || bpm(bpGraph, matchR[v],seen, matchR)){
+            // recursive call will not get actor 'v' again
+            if (matchR[v] < 0 || bpm(bpGraph, matchR[v], seen, matchR)){
                 matchR[v] = u;
                 return true;
             }
@@ -58,32 +56,26 @@ bool bpm(vector<vector<bool>>& bpGraph, int u,vector<bool>& seen, vector<int>& m
     }
     return false;
 }
-// Returns maximum number
-// of matching from actresses to actors: refer to this
+// Returns maximum number of matching from actresses to actors:
 int maxBPM(vector<vector<bool>>& bpGraph){
-    // An array to keep track of the
-    // applicants assigned to jobs.
-    // The value of matchR[i] is the
-    // applicant number assigned to job i,
-    // the value -1 indicates nobody is
-    // assigned.
+
+    //matchR[i] is the actress number assigned to actor i
     vector<int> matchR;
     matchR.reserve(bpGraph.size());
     //initialise the vector
     for (int i = 0 ; i < bpGraph.size(); i++)
-        matchR.push_back(-1);
+        matchR.push_back(-1);  // the value -1 indicates nobody is assigned.
 
-    // Count of jobs assigned to applicants
+    // Count of actors assigned to actresses
     int result = 0;
     for (int u = 0; u < bpGraph.size(); u++){
-        // Mark all jobs as not seen
-        // for next applicant.
+        // Mark all actors as unseen for the next actress.
         vector<bool> seen;
         seen.reserve(bpGraph.size());
         for (int i = 0 ; i < bpGraph.size(); i++)
             seen.push_back(false);
 
-        // Find if the applicant 'u' can get a job
+        // Find if the actresses 'u' can get a actor
         if (bpm(bpGraph, u, seen, matchR))
             result++;
     }
@@ -164,5 +156,6 @@ int main()
 //useful links:
 //https://cs.stackexchange.com/questions/118508/winning-strategy-for-a-given-game-on-graphs
 //http://discrete.openmathbooks.org/dmoi3/sec_matchings.html
-//https://www.geeksforgeeks.org/hopcroft-karp-algorithm-for-maximum-matching-set-1-introduction/
+//https://www.geeksforgeeks.org/maximum-bipartite-matching/ this is the current implementation!!
+//https://www.geeksforgeeks.org/hopcroft-karp-algorithm-for-maximum-matching-set-1-introduction/ this is better but harder i think
 //https://www.geeksforgeeks.org/hopcroft-karp-algorithm-for-maximum-matching-set-2-implementation/
