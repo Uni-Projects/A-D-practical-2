@@ -24,7 +24,7 @@ vector<Actress> actresses;
 vector<Actor> actors;
 
 //this function returns true if actress and actor have costarred in some movie, false otherwise
-//every movie the actress is in is checked on every actor hash-map to see if the costarred
+//every movie the actress is in is checked on every actor hash-map to see if they costarred
 bool costarred (const Actress& actress , const Actor& actor){
     hash<string> hash;
     for (const string& m : actress.starredmovies){
