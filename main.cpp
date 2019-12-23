@@ -6,9 +6,11 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <ctime>
+#include <chrono>
+#include <sstream>
 
 using namespace std;
+using namespace std::chrono;
 
 struct Actor {
     string name;
@@ -85,21 +87,23 @@ int maxBPM(vector<vector<bool>>& bpGraph){
 int main()
 {
     int total_actors, total_movies;
-    cin >> total_actors >> total_movies;
-    clock_t tStart = clock(); //clock for testing purposes
+    string total;
+    getline(cin,total);
+    stringstream (total) >> total_actors >> total_movies;
+
+    auto start = high_resolution_clock::now();
     string name;
     hash<string> hash; //this function hashes the string
-
     // get actress names
     for(int i = 0; i < total_actors; i++) {
-        cin >> name;
+        getline(cin,name);
         Actress actress = {name};
         actresses.push_back(actress);
     }
 
     // get actor names
     for (int i = 0; i < total_actors; i++) {
-        cin >> name;
+        getline(cin,name);
         Actor actor = {name};
         actors.push_back(actor);
     }
@@ -108,13 +112,15 @@ int main()
     for(int i = 0; i < total_movies; i++) {
         // get movie name
         string title;
-        cin >> title;
+        getline(cin,title);
         // get cast size
         int cast_size;
-        cin >> cast_size;
+        string cast_size_string;
+        getline(cin,cast_size_string);
+        cast_size = stoi(cast_size_string);
         // populate actors hash-map and actresses movies
         for (int j = 0; j < cast_size ; j++) {
-            cin >> name;
+            getline(cin,name);
             for (int k = 0; k < total_actors; k++) {
                 if(actresses[k].name == name)
                     actresses[k].starredmovies.push_back(title);
@@ -124,9 +130,18 @@ int main()
             }
         }
     }
+    /*
+    for(const auto& actress : actresses) {
+        cout << actress.name << endl;
+    }
+    for (const auto& actor : actors){
+        cout << actor.name << endl;
+    }
+    */
 
     //timestamp
-    printf("Time taken to create the struct: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    auto stop1 = high_resolution_clock::now();
+    //cout << "Time taken to get the input: " <<  duration_cast<milliseconds>(stop1 - start).count() << endl;
 
     // creation of the bipartite graph as a adjacency matrix made with vectors (crazy)
     vector<vector<bool>> bpGraph;
@@ -140,17 +155,19 @@ int main()
     }
 
     //timestamp before algorithm
-    printf("Time taken to create the matrix: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    auto stop2 = high_resolution_clock::now();
+    //cout << "Time taken to fill the graph: " <<  duration_cast<milliseconds>(stop2 - stop1).count() << endl;
     int res = maxBPM(bpGraph);
 
-    //timestamp before algorithm
-    printf("Total time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    //timestamp after algorithm
+    auto stop3 = high_resolution_clock::now();
+    //cout << "Time taken to run the algorithm: " <<  duration_cast<milliseconds>(stop3 - stop2).count() << endl;
 
     //output
     if(res == total_actors)
-        cout <<"Mark" << endl;
+        cout <<"Mark";
     else
-        cout <<"Veronique" << endl;
+        cout <<"Veronique";
     return 0;
 }
 //useful links:
